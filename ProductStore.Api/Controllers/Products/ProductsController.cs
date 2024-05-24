@@ -5,6 +5,7 @@ using ProductStore.Domain.Configurations;
 using ProductStore.Service.DTOs.Products;
 using ProductStore.Service.Interfaces.Products;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace ProductStore.Api.Controllers.Products
 {
@@ -18,50 +19,70 @@ namespace ProductStore.Api.Controllers.Products
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromForm] ProductForCreationDto productForCreationDto)
-            => Ok(new Response
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> AddAsync([FromBody] ProductForCreationDto productForCreationDto)
+        {
+            var result = await _productService.CreateAsync(productForCreationDto);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _productService.CreateAsync(productForCreationDto)
+                Data = result
             });
+        }
 
         [HttpGet]
+        [Produces("application/json")]
         public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)
-            => Ok(new Response
+        {
+            var result = await _productService.SelectAllAsync(@params);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _productService.SelectAllAsync(@params)
+                Data = result
             });
-
+        }
 
         [HttpGet("{id}")]
+        [Produces("application/json")]
         public async Task<IActionResult> GetByIdAsync([Required] long id)
-            => Ok(new Response
+        {
+            var result = await _productService.SelectByIdAsync(id);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _productService.SelectByIdAsync(id)
+                Data = result
             });
+        }
 
-        [HttpPut]
-        public async Task<IActionResult> ModifyAsync(long id, [FromForm] ProductForUpdateDto productForUpdate)
-            => Ok(new Response
+        [HttpPut("{id}")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> ModifyAsync([FromRoute] long id, [FromBody] ProductForUpdateDto productForUpdate)
+        {
+            var result = await _productService.ModifyAsync(id, productForUpdate);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _productService.ModifyAsync(id, productForUpdate)
+                Data = result
             });
+        }
 
         [HttpDelete("{id}")]
+        [Produces("application/json")]
         public async Task<IActionResult> DeleteAsync([Required] long id)
-            => Ok(new Response
+        {
+            var result = await _productService.RemoveAsync(id);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _productService.RemoveAsync(id)
+                Data = result
             });
-
+        }
     }
 }

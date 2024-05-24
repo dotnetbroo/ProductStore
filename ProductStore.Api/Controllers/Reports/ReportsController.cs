@@ -2,63 +2,86 @@
 using ProductStore.Api.Controllers.Commons;
 using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
-using ProductStore.Service.DTOs.OrderItems;
 using ProductStore.Service.DTOs.Reports;
 using ProductStore.Service.Interfaces.Reports;
+using System.Threading.Tasks;
 
-namespace ProductStore.Api.Controllers.Reports;
-
-public class ReportsController : BaseController
+namespace ProductStore.Api.Controllers.Reports
 {
-    private readonly IReportService _reportService;
-
-    public ReportsController(IReportService reportService)
+    public class ReportsController : BaseController
     {
-        _reportService = reportService;
-    }
+        private readonly IReportService _reportService;
 
-    [HttpPost]
-    public async Task<IActionResult> InsertAsync([FromForm] ReportForCreationDto dto)
-            => Ok(new Response
+        public ReportsController(IReportService reportService)
+        {
+            _reportService = reportService;
+        }
+
+        [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> InsertAsync([FromBody] ReportForCreationDto dto)
+        {
+            var result = await _reportService.CreateAsync(dto);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _reportService.CreateAsync(dto)
+                Data = result
             });
+        }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)
-        => Ok(new Response
+        [HttpGet]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)
         {
-            Code = 200,
-            Message = "Success",
-            Data = await _reportService.RetrieveAllAsync(@params)
-        });
+            var result = await _reportService.RetrieveAllAsync(@params);
+            return Ok(new Response
+            {
+                Code = 200,
+                Message = "Success",
+                Data = result
+            });
+        }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetByIdAsync(long id)
-        => Ok(new Response
+        [HttpGet("{id}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
-            Code = 200,
-            Message = "Success",
-            Data = await _reportService.RetrieveByIdAsync(id)
-        });
+            var result = await _reportService.RetrieveByIdAsync(id);
+            return Ok(new Response
+            {
+                Code = 200,
+                Message = "Success",
+                Data = result
+            });
+        }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync([FromRoute] long id)
-        => Ok(new Response
+        [HttpDelete("{id}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> DeleteAsync([FromRoute] long id)
         {
-            Code = 200,
-            Message = "Success",
-            Data = await _reportService.RemoveAsync(id)
-        });
+            var result = await _reportService.RemoveAsync(id);
+            return Ok(new Response
+            {
+                Code = 200,
+                Message = "Success",
+                Data = result
+            });
+        }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] long id, [FromForm] ReportForUpdateDto dto)
-        => Ok(new Response
+        [HttpPut("{id}")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] long id, [FromBody] ReportForUpdateDto dto)
         {
-            Code = 200,
-            Message = "Success",
-            Data = await _reportService.ModifyAsync(id, dto)
-        });
+            var result = await _reportService.ModifyAsync(id, dto);
+            return Ok(new Response
+            {
+                Code = 200,
+                Message = "Success",
+                Data = result
+            });
+        }
+    }
 }

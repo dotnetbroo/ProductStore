@@ -4,6 +4,7 @@ using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
 using ProductStore.Service.DTOs.OrderItems;
 using ProductStore.Service.Interfaces.Orders;
+using System.Threading.Tasks;
 
 namespace ProductStore.Api.Controllers.Orders
 {
@@ -17,48 +18,70 @@ namespace ProductStore.Api.Controllers.Orders
         }
 
         [HttpPost]
-        public async Task<IActionResult> InsertAsync([FromForm] OrderItemForCreationDto dto)
-            => Ok(new Response
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> InsertAsync([FromBody] OrderItemForCreationDto dto)
+        {
+            var result = await _orderItemService.CreateAsync(dto);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _orderItemService.CreateAsync(dto)
+                Data = result
             });
+        }
 
         [HttpGet]
+        [Produces("application/json")]
         public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)
-            => Ok(new Response
+        {
+            var result = await _orderItemService.RetrieveAllAsync(@params);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _orderItemService.RetrieveAllAsync(@params)
+                Data = result
             });
+        }
 
         [HttpGet("{id}")]
+        [Produces("application/json")]
         public async Task<IActionResult> GetByIdAsync(long id)
-            => Ok(new Response
+        {
+            var result = await _orderItemService.RetrieveByIdAsync(id);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _orderItemService.RetrieveByIdAsync(id)
+                Data = result
             });
+        }
 
         [HttpDelete("{id}")]
+        [Produces("application/json")]
         public async Task<IActionResult> DeleteAsync([FromRoute] long id)
-            => Ok(new Response
+        {
+            var result = await _orderItemService.RemoveAsync(id);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _orderItemService.RemoveAsync(id)
+                Data = result
             });
+        }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync([FromRoute] long id, [FromForm] OrderItemForUpdateDto dto)
-            => Ok(new Response
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] long id, [FromBody] OrderItemForUpdateDto dto)
+        {
+            var result = await _orderItemService.ModifyAsync(id, dto);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _orderItemService.ModifyAsync(id, dto)
+                Data = result
             });
+        }
     }
 }

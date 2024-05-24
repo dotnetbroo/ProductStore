@@ -2,26 +2,31 @@
 using ProductStore.Api.Helpers;
 using ProductStore.Service.DTOs.Logins;
 using ProductStore.Service.Interfaces.Accounts;
-using ProductStore.Service.Interfaces.Commons;
+using System.Threading.Tasks;
 
-namespace ProductStore.Api.Controllers.Commons;
-
-public class AuthController : BaseController
+namespace ProductStore.Api.Controllers.Commons
 {
-    private readonly IAccountService accountService;
-
-    public AuthController(IAccountService accountService, IAuthService authService)
+    public class AuthController : BaseController
     {
-        this.accountService = accountService;
-    }
+        private readonly IAccountService _accountService;
 
-    [HttpPost]
-    [Route("login")]
-    public async ValueTask<IActionResult> login([FromBody] LoginDto loginDto)
-        => Ok(new Response
+        public AuthController(IAccountService accountService)
         {
-            Code = 200,
-            Message = "Success",
-            Data = await accountService.LoginAsync(loginDto)
-        });
+            _accountService = accountService;
+        }
+
+        [HttpPost("login")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async ValueTask<IActionResult> Login([FromBody] LoginDto loginDto)
+        {
+            var result = await _accountService.LoginAsync(loginDto);
+            return Ok(new Response
+            {
+                Code = 200,
+                Message = "Success",
+                Data = result
+            });
+        }
+    }
 }

@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductStore.Api.Controllers.Commons;
+using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
 using ProductStore.Service.DTOs.Categories;
 using ProductStore.Service.DTOs.CategoryDTOs;
 using ProductStore.Service.Interfaces.Categories;
-using ProductStore.Api.Helpers;
 
 namespace ProductStore.Api.Controllers.Categories
 {
     public class CategoriesController : BaseController
     {
-        ICategoryService _categoryService;
+        private readonly ICategoryService _categoryService;
 
         public CategoriesController(ICategoryService categoryService)
         {
@@ -18,48 +18,70 @@ namespace ProductStore.Api.Controllers.Categories
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromForm] CategoryForCreationDto dto)
-           => Ok(new Response
-           {
-               Code = 200,
-               Message = "Success",
-               Data = await _categoryService.CreateAsync(dto)
-           });
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> PostAsync([FromBody] CategoryForCreationDto dto)
+        {
+            var result = await _categoryService.CreateAsync(dto);
+            return Ok(new Response
+            {
+                Code = 200,
+                Message = "Success",
+                Data = result
+            });
+        }
 
         [HttpGet]
+        [Produces("application/json")]
         public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)
-            => Ok(new Response
+        {
+            var result = await _categoryService.RetrieveAllAsync(@params);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _categoryService.RetrieveAllAsync(@params)
+                Data = result
             });
+        }
 
         [HttpGet("{id}")]
+        [Produces("application/json")]
         public async Task<IActionResult> GetByIdAsync([FromRoute(Name = "id")] long id)
-            => Ok(new Response
+        {
+            var result = await _categoryService.RetrieveByIdAsync(id);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _categoryService.RetrieveByIdAsync(id)
+                Data = result
             });
+        }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync([FromRoute(Name = "id")] long id, [FromForm] CategoryForUpdateDto dto)
-            => Ok(new Response
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        public async Task<IActionResult> UpdateAsync([FromRoute(Name = "id")] long id, [FromBody] CategoryForUpdateDto dto)
+        {
+            var result = await _categoryService.ModifyAsync(id, dto);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _categoryService.ModifyAsync(id, dto)
+                Data = result
             });
+        }
 
         [HttpDelete("{id}")]
+        [Produces("application/json")]
         public async Task<IActionResult> DeleteAsync([FromRoute(Name = "id")] long id)
-            => Ok(new Response
+        {
+            var result = await _categoryService.ReamoveAsync(id);
+            return Ok(new Response
             {
                 Code = 200,
                 Message = "Success",
-                Data = await _categoryService.ReamoveAsync(id)
+                Data = result
             });
+        }
     }
 }
