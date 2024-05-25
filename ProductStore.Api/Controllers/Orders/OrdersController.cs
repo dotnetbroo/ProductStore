@@ -70,7 +70,7 @@ namespace ProductStore.Api.Controllers.Orders
             });
         }
 
-        [HttpPut("{id}")]
+        /*[HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
         public async Task<IActionResult> UpdateAsync([FromRoute] long id, [FromBody] OrderForUpdateDto dto)
@@ -82,6 +82,6 @@ namespace ProductStore.Api.Controllers.Orders
                 Message = "Success",
                 Data = result
             });
-        }
+        }*/
     }
 }
