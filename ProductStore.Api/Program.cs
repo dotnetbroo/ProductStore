@@ -22,7 +22,7 @@ namespace ProductStore.Api
 
             //Set Database Configuration
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddAutoMapper(typeof(MapperProfile));
 
             builder.Services.AddCustomServices();
