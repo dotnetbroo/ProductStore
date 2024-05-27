@@ -22,11 +22,34 @@ namespace ProductStore.Api
 
             //Set Database Configuration
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddAutoMapper(typeof(MapperProfile));
 
             builder.Services.AddCustomServices();
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Seller", policy => policy.RequireRole("Seller"));
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admins", policy =>
+                {
+                    policy.RequireRole("Admin", "Seller");
+                });
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Customer", policy => policy.RequireRole("Customer"));
+            });
 
             // Logger
             var logger = new LoggerConfiguration()

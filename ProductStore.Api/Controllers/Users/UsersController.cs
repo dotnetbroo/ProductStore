@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductStore.Api.Controllers.Commons;
 using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
 using ProductStore.Service.DTOs.Users;
 using ProductStore.Service.Interfaces.Users;
-using System.Threading.Tasks;
 
 namespace ProductStore.Api.Controllers.Users
 {
-
+   // [Authorize]
     public class UsersController : BaseController
     {
         private readonly IUserService _userService;
@@ -18,6 +18,7 @@ namespace ProductStore.Api.Controllers.Users
             _userService = userService;
         }
 
+       // [AllowAnonymous]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -31,7 +32,7 @@ namespace ProductStore.Api.Controllers.Users
                 Data = result
             });
         }
-
+       // [Authorize("Admin")]
         [HttpGet]
         [Produces("application/json")]
         public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)
@@ -40,6 +41,7 @@ namespace ProductStore.Api.Controllers.Users
             return Ok(result);
         }
 
+       // [Authorize("Admin")]
         [HttpGet("{id}")]
         [Produces("application/json")]
         public async Task<IActionResult> GetByIdAsync(long id)
@@ -53,6 +55,7 @@ namespace ProductStore.Api.Controllers.Users
             });
         }
 
+       // [Authorize("Admin")]
         [HttpDelete("{id}")]
         [Produces("application/json")]
         public async Task<IActionResult> DeleteAsync([FromRoute] long id)
@@ -66,6 +69,7 @@ namespace ProductStore.Api.Controllers.Users
             });
         }
 
+       // [Authorize("Admin")]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -80,6 +84,7 @@ namespace ProductStore.Api.Controllers.Users
             });
         }
 
+       // [AllowAnonymous]
         [HttpPut("change-password")]
         [Consumes("application/json")]
         [Produces("application/json")]

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductStore.Api.Controllers.Commons;
 using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductStore.Api.Controllers.Reports
 {
+  //  [Authorize]
     public class ReportsController : BaseController
     {
         private readonly IReportService _reportService;
@@ -17,6 +19,7 @@ namespace ProductStore.Api.Controllers.Reports
             _reportService = reportService;
         }
 
+       // [Authorize("Admins")]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -31,6 +34,7 @@ namespace ProductStore.Api.Controllers.Reports
             });
         }
 
+        //[Authorize("Admins")]
         [HttpGet]
         [Produces("application/json")]
         public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)
@@ -44,6 +48,7 @@ namespace ProductStore.Api.Controllers.Reports
             });
         }
 
+       // [Authorize("Admins")]
         [HttpGet("{id}")]
         [Produces("application/json")]
         public async Task<IActionResult> GetByIdAsync(long id)
@@ -57,6 +62,7 @@ namespace ProductStore.Api.Controllers.Reports
             });
         }
 
+       // [Authorize("Admins")]
         [HttpDelete("{id}")]
         [Produces("application/json")]
         public async Task<IActionResult> DeleteAsync([FromRoute] long id)
@@ -69,7 +75,7 @@ namespace ProductStore.Api.Controllers.Reports
                 Data = result
             });
         }
-
+       // [Authorize("Admins")]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]

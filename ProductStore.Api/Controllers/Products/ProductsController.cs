@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductStore.Api.Controllers.Commons;
 using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ProductStore.Api.Controllers.Products
 {
+    [Authorize]
     public class ProductsController : BaseController
     {
         private readonly IProductService _productService;
@@ -18,6 +20,7 @@ namespace ProductStore.Api.Controllers.Products
             _productService = productService;
         }
 
+       // [Authorize("Admins")]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -58,6 +61,7 @@ namespace ProductStore.Api.Controllers.Products
             });
         }
 
+       // [Authorize("Admins")]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -72,6 +76,7 @@ namespace ProductStore.Api.Controllers.Products
             });
         }
 
+      //  [Authorize("Admins")]
         [HttpDelete("{id}")]
         [Produces("application/json")]
         public async Task<IActionResult> DeleteAsync([Required] long id)

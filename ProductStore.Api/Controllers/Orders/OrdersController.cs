@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductStore.Api.Controllers.Commons;
 using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductStore.Api.Controllers.Orders
 {
+    //[Authorize]
     public class OrdersController : BaseController
     {
         private readonly IOrderService _orderService;
@@ -31,6 +33,7 @@ namespace ProductStore.Api.Controllers.Orders
             });
         }
 
+       // [Authorize("Admins")]
         [HttpGet]
         [Produces("application/json")]
         public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)

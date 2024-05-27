@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductStore.Api.Controllers.Commons;
 using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
@@ -8,6 +9,7 @@ using ProductStore.Service.Interfaces.Categories;
 
 namespace ProductStore.Api.Controllers.Categories
 {
+    //[Authorize]
     public class CategoriesController : BaseController
     {
         private readonly ICategoryService _categoryService;
@@ -17,6 +19,7 @@ namespace ProductStore.Api.Controllers.Categories
             _categoryService = categoryService;
         }
 
+        //[Authorize(Policy = "Admins")]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -31,6 +34,7 @@ namespace ProductStore.Api.Controllers.Categories
             });
         }
 
+        //[Authorize("Admins")]
         [HttpGet]
         [Produces("application/json")]
         public async Task<IActionResult> GetAllAsync([FromQuery] PaginationParams @params)
@@ -44,6 +48,7 @@ namespace ProductStore.Api.Controllers.Categories
             });
         }
 
+        //[Authorize("Admins")]
         [HttpGet("{id}")]
         [Produces("application/json")]
         public async Task<IActionResult> GetByIdAsync([FromRoute(Name = "id")] long id)
@@ -57,6 +62,7 @@ namespace ProductStore.Api.Controllers.Categories
             });
         }
 
+       // [Authorize("Admins")]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -71,6 +77,7 @@ namespace ProductStore.Api.Controllers.Categories
             });
         }
 
+       // [Authorize("Admins")]
         [HttpDelete("{id}")]
         [Produces("application/json")]
         public async Task<IActionResult> DeleteAsync([FromRoute(Name = "id")] long id)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductStore.Api.Controllers.Commons;
 using ProductStore.Api.Helpers;
 using ProductStore.Domain.Configurations;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductStore.Api.Controllers.Orders
 {
+    //[Authorize]
     public class OrderItemsController : BaseController
     {
         private readonly IOrderItemService _orderItemService;
@@ -17,7 +19,7 @@ namespace ProductStore.Api.Controllers.Orders
             _orderItemService = orderItemService;
         }
 
-        [HttpPost]
+       [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
         public async Task<IActionResult> InsertAsync([FromBody] OrderItemForCreationDto dto)
